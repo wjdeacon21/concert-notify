@@ -1,3 +1,5 @@
+//adding a comment so i can see the changes
+
 // DOM Elements
 const artistInput = document.getElementById('artistInput');
 const resultContainer = document.getElementById('resultContainer');
