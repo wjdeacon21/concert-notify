@@ -34,6 +34,66 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Auth Container Styles */
+.auth-container {
+    text-align: center;
+}
+
+.auth-container p {
+    color: var(--spotify-gray);
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.login-button {
+    background: var(--spotify-green);
+    color: var(--spotify-white);
+    border: none;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 auto;
+}
+
+.login-button:hover {
+    background: #1ed760;
+    transform: translateY(-2px);
+}
+
+/* App Container Styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.logout-button {
+    background: transparent;
+    color: var(--spotify-gray);
+    border: 1px solid var(--spotify-gray);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logout-button:hover {
+    color: var(--spotify-white);
+    border-color: var(--spotify-white);
+}
+
 h1 {
     color: var(--spotify-white);
     text-align: center;
@@ -42,9 +102,9 @@ h1 {
     font-weight: 700;
     letter-spacing: -0.5px;
     background: linear-gradient(45deg, var(--spotify-green), #1ed760);
-    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .search-container {
@@ -228,5 +288,15 @@ button:active {
     .song-cover {
         width: 150px;
         height: 150px;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .logout-button {
+        width: 100%;
+        justify-content: center;
     }
 }
