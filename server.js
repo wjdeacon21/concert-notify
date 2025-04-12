@@ -39,7 +39,7 @@ function generateRandomString(length) {
 // Login endpoint
 app.get('/login', (req, res) => {
     const state = generateRandomString(16);
-    const scope = 'user-read-private user-read-email user-top-read';
+    const scope = 'user-read-private user-read-email user-top-read user-read-currently-playing';
     
     res.redirect('https://accounts.spotify.com/authorize?' +
         querystring.stringify({
@@ -85,19 +85,30 @@ app.get('/callback', async (req, res) => {
             const access_token = response.data.access_token;
             const refresh_token = response.data.refresh_token;
             
+            // Get user profile
+            const userResponse = await axios.get('https://api.spotify.com/v1/me', {
+                headers: {
+                    'Authorization': `Bearer ${access_token}`
+                }
+            });
+            
+            const username = userResponse.data.display_name;
+            
             // Store tokens (in a real app, you'd use a database)
             const userId = generateRandomString(16);
             userTokens.set(userId, {
                 access_token,
                 refresh_token,
-                expires_at: Date.now() + (response.data.expires_in * 1000)
+                expires_at: Date.now() + (response.data.expires_in * 1000),
+                username
             });
 
             // Redirect to frontend with tokens
             res.redirect(`/#${querystring.stringify({
                 access_token,
                 refresh_token,
-                userId
+                userId,
+                username
             })}`);
 
         } catch (error) {

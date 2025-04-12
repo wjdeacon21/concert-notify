@@ -13,7 +13,8 @@ const DOM_ELEMENTS = {
     loading: document.getElementById('loading'),
     songCover: document.getElementById('songCover'),
     songTitle: document.getElementById('songTitle'),
-    artistName: document.getElementById('artistName')
+    artistName: document.getElementById('artistName'),
+    username: document.getElementById('username')
 };
 
 // State Management
@@ -21,7 +22,8 @@ const state = {
     userId: null,
     accessToken: null,
     refreshToken: null,
-    expiresAt: null
+    expiresAt: null,
+    username: null
 };
 
 // UI State Management
@@ -51,10 +53,13 @@ const Auth = {
         state.accessToken = null;
         state.refreshToken = null;
         state.expiresAt = null;
+        state.username = null;
         localStorage.removeItem('userId');
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('expiresAt');
+        localStorage.removeItem('username');
+        DOM_ELEMENTS.username.textContent = '';
         UIState.hideElement(DOM_ELEMENTS.appContainer);
         UIState.showElement(DOM_ELEMENTS.authContainer);
     },
@@ -67,13 +72,16 @@ const Auth = {
             state.accessToken = params.get('access_token');
             state.refreshToken = params.get('refresh_token');
             state.userId = params.get('userId');
+            state.username = params.get('username');
             state.expiresAt = Date.now() + (3600 * 1000); // 1 hour from now
             
             localStorage.setItem('accessToken', state.accessToken);
             localStorage.setItem('refreshToken', state.refreshToken);
             localStorage.setItem('userId', state.userId);
+            localStorage.setItem('username', state.username);
             localStorage.setItem('expiresAt', state.expiresAt);
             
+            DOM_ELEMENTS.username.textContent = state.username;
             window.location.hash = '';
             UIState.hideElement(DOM_ELEMENTS.authContainer);
             UIState.showElement(DOM_ELEMENTS.appContainer);
@@ -81,12 +89,14 @@ const Auth = {
             state.accessToken = localStorage.getItem('accessToken');
             state.refreshToken = localStorage.getItem('refreshToken');
             state.userId = localStorage.getItem('userId');
+            state.username = localStorage.getItem('username');
             state.expiresAt = parseInt(localStorage.getItem('expiresAt'));
             
             if (state.accessToken && state.userId) {
                 if (Date.now() >= state.expiresAt) {
                     Auth.refreshToken();
                 } else {
+                    DOM_ELEMENTS.username.textContent = state.username;
                     UIState.hideElement(DOM_ELEMENTS.authContainer);
                     UIState.showElement(DOM_ELEMENTS.appContainer);
                 }

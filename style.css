@@ -300,3 +300,15 @@ button:active {
         justify-content: center;
     }
 }
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.username {
+    color: var(--spotify-gray);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
