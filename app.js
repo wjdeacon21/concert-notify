@@ -14,7 +14,8 @@ const DOM_ELEMENTS = {
     songCover: document.getElementById('songCover'),
     songTitle: document.getElementById('songTitle'),
     artistName: document.getElementById('artistName'),
-    username: document.getElementById('username')
+    username: document.getElementById('username'),
+    topArtists: document.getElementById('topArtists')
 };
 
 // State Management
@@ -85,6 +86,7 @@ const Auth = {
             window.location.hash = '';
             UIState.hideElement(DOM_ELEMENTS.authContainer);
             UIState.showElement(DOM_ELEMENTS.appContainer);
+            fetchTopArtists();
         } else {
             state.accessToken = localStorage.getItem('accessToken');
             state.refreshToken = localStorage.getItem('refreshToken');
@@ -99,6 +101,7 @@ const Auth = {
                     DOM_ELEMENTS.username.textContent = state.username;
                     UIState.hideElement(DOM_ELEMENTS.authContainer);
                     UIState.showElement(DOM_ELEMENTS.appContainer);
+                    fetchTopArtists();
                 }
             }
         }
@@ -168,6 +171,44 @@ const searchArtist = async () => {
     } finally {
         UIState.hideLoading();
     }
+};
+
+const fetchTopArtists = async () => {
+    if (!state.userId || !state.accessToken) return;
+
+    try {
+        const response = await fetch(`/api/top-artists?userId=${state.userId}`, {
+            headers: {
+                'Authorization': `Bearer ${state.accessToken}`
+            }
+        });
+        
+        if (response.status === 401) {
+            await Auth.refreshToken();
+            return fetchTopArtists();
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+            throw new Error(data.error);
+        }
+
+        updateTopArtists(data.topArtists);
+    } catch (error) {
+        console.error('Error fetching top artists:', error);
+        UIState.showError('Failed to load top artists');
+    }
+};
+
+const updateTopArtists = (artists) => {
+    DOM_ELEMENTS.topArtists.innerHTML = artists.map(artist => `
+        <a href="${artist.url}" target="_blank" class="artist-card">
+            <img src="${artist.image}" alt="${artist.name}" class="artist-image">
+            <div class="artist-name">${artist.name}</div>
+            <div class="artist-genres">${artist.genres.join(', ')}</div>
+        </a>
+    `).join('');
 };
 
 // Event Listeners
