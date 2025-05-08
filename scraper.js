@@ -1,11 +1,8 @@
-const puppeteer = require('puppeteer');
-const axios = require('axios');
-const cheerio = require('cheerio');
+const { chromium } = require('playwright');
 
 async function getArtistNames() {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--ignore-certificate-errors','--disable-setuid-sandbox','--ignore-certificate-errors']  // 👈 ignores SSL cert issues
+  const browser = await chromium.launch({
+    headless: true
   });
 
   const page = await browser.newPage();
@@ -16,7 +13,7 @@ async function getArtistNames() {
     console.log(`Scraping page ${pageNum}...`);
     
     await page.goto(url, {
-      waitUntil: 'networkidle2',
+      waitUntil: 'networkidle',
       timeout: 0
     });
 
@@ -56,7 +53,7 @@ async function getArtistNames() {
 // Run directly
 if (require.main === module) {
   getArtistNames().catch(error => {
-    console.error('❌ Error in Puppeteer scraper:', error.message);
+    console.error('❌ Error in Playwright scraper:', error.message);
   });
 }
 
