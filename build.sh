@@ -5,8 +5,8 @@ set -o errexit
 # Install npm dependencies
 npm install
 
-# Install Playwright browsers
-npx playwright install --with-deps chromium
+# Install Playwright browsers with system dependencies
+PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install --with-deps chromium
 
 # Optional: Clean up to reduce deployment size
 npm cache clean --force 
